@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+export HUBOT_SLACK_TOKEN=xoxb-1365714980628-1373350448098-Aabguv8W0vYqOBMXjQDh5hDv
+export export EXPRESS_PORT=13001
+
+npm fund
+export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
+
+exec node_modules/.bin/hubot --name "myhubot" "$@"
