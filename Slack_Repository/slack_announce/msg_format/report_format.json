@@ -1,0 +1,20 @@
+[
+    {
+        "type": "section",
+        "block_id": "section_header",
+        "text": {
+            "type": "mrkdwn",
+            "text": "Unknown"
+        }
+    },
+    {
+        "type": "section",
+        "block_id": "section_content",
+        "fields": [
+            {
+                "type": "mrkdwn",
+                "text": "Text Template"
+            }
+        ]
+    }
+]

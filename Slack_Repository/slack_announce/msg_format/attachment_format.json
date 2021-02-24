@@ -1,0 +1,27 @@
+{
+    "mrkdwn_in": [
+        "text"
+    ],
+    "color": "#64b5f6",
+    "pretext": "Optional pre-text that appears above the attachment block",
+    "title": "title",
+    "title_link": "https://api.slack.com/",
+    "text": "Optional `text` that appears within the attachment",
+    "fields": [
+        {
+            "title": "TOTAL",
+            "value": "Total value",
+            "short": false
+        },
+        {
+            "title": "CRITICAL",
+            "value": "Critical value",
+            "short": true
+        },
+        {
+            "title": "BLOCKER",
+            "value": "Blocker value",
+            "short": true
+        }
+    ]
+}
