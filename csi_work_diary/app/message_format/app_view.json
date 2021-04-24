@@ -1,0 +1,71 @@
+{
+    "type": "modal",
+    "callback_id": "regist-modal",
+    "title": {
+        "type": "plain_text",
+        "text": "Resister time card"
+    },
+    "submit": {
+        "type": "plain_text",
+        "text": "Submit"
+    },
+    "close": {
+        "type": "plain_text",
+        "text": "Cancel"
+    },
+    "blocks": [
+        {
+            "block_id": "date_yyyyMM",
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "target_month",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "yyyyMM",
+                    "emoji": true
+                }
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Target Month",
+                "emoji": true
+            }
+        },
+        {
+            "block_id": "user_crenditial",
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "passwd",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Input password",
+                    "emoji": true
+                }
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Password",
+                "emoji": true
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Add sepecific date."
+            },
+            "accessory": {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "Add specific date",
+                    "emoji": true
+                },
+                "value": "click_me",
+                "action_id": "addSpecificDate"
+            }
+        }
+    ]
+}

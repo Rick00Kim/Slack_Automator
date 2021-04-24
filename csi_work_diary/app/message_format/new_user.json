@@ -1,0 +1,91 @@
+{
+    "type": "modal",
+    "callback_id": "regist-user",
+    "title": {
+        "type": "plain_text",
+        "text": "User Register",
+        "emoji": true
+    },
+    "submit": {
+        "type": "plain_text",
+        "text": "Submit",
+        "emoji": true
+    },
+    "close": {
+        "type": "plain_text",
+        "text": "Cancel",
+        "emoji": true
+    },
+    "blocks": [
+        {
+            "block_id": "memberID",
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "jmottoMemberID"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Member ID",
+                "emoji": true
+            }
+        },
+        {
+            "block_id": "UserID",
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "jmottoUserID"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "User ID",
+                "emoji": true
+            }
+        },
+        {
+            "block_id": "timeset_start",
+            "type": "input",
+            "element": {
+                "type": "static_select",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select default working start time.",
+                    "emoji": true
+                },
+                "options": [
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "09:00",
+                            "emoji": true
+                        },
+                        "value": "0900"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "10:00",
+                            "emoji": true
+                        },
+                        "value": "1000"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "11:00",
+                            "emoji": true
+                        },
+                        "value": "1100"
+                    }
+                ],
+                "action_id": "start_time"
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "Start Time",
+                "emoji": true
+            }
+        }
+    ]
+}
