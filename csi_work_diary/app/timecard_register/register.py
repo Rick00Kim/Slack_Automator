@@ -38,6 +38,27 @@ class JmottoOperator:
         finally:
             print('{} is clicked'.format(target))
 
+    def get_registered_date(self, year, month):
+        registered_dates = []
+        self.target_driver.get(time_card_main_url.format(
+            self.user_infor[0], datetime.datetime(
+                year, month, 2).strftime('%Y%m%d')))
+
+        try:
+            target_element = self.target_driver.find_element_by_xpath(
+                "//table[@id='jco-table-list']/tbody")
+
+            for row in target_element.text.split('\n'):
+                print(row)
+                print(row[5:])
+                if row[5:].strip() and '未入力' not in row:
+                    registered_dates.append(datetime.datetime(
+                        year, month, int(row[:2])))
+        except Exception as e:
+            print(e)
+
+        return registered_dates
+
     def first_login(self):
 
         self.target_driver.get(login_url)
@@ -71,12 +92,14 @@ class JmottoOperator:
             if int(month) == datetime.date.today().month \
             else monthrange(year, month)[1] + 1
 
+        registed_dates = self.get_registered_date(year, month)
+
         for day in range(1, date_range_to):
             target_ymd = datetime.datetime(year, month, day)
-            if target_ymd.weekday() > 4:
-                print('{} -> Weekend or Holiday'.format(target_ymd))
+            if target_ymd.weekday() > 4 or target_ymd in registed_dates:
+                print('{} -> Weekend or Holiday or registed.'.format(target_ymd))
             else:
-                self.target_driver.get(time_card_url.format(
+                self.target_driver.get(time_card_register_url.format(
                     self.user_infor[0], target_ymd.strftime('%Y%m%d')))
                 time.sleep(2)
                 self.set_value_by_css_selector(
