@@ -37,4 +37,6 @@ function_diary = ["diary", "타임카드 등록"]
 # J-MOTTO constants
 login_url = 'https://www1.j-motto.co.jp/fw/dfw/po80/portal/contents/login.html'
 
-time_card_url = 'https://gws51.j-motto.co.jp/cgi-bin/{}/ztcard.cgi?cmd=tcardindex#cmd=tcardentry&id={}'
+time_card_main_url = 'https://gws51.j-motto.co.jp/cgi-bin/{}/ztcard.cgi?cmd=tcardindex#date={}&cmd=tcardindex'
+
+time_card_register_url = 'https://gws51.j-motto.co.jp/cgi-bin/{}/ztcard.cgi?cmd=tcardindex#cmd=tcardentry&id={}'
