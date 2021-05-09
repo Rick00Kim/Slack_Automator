@@ -1,4 +1,5 @@
 import json
+from .member import initialize
 from flask import Flask, Response, request, make_response
 from slackeventsapi import SlackEventAdapter
 from slack.errors import SlackApiError
@@ -7,7 +8,7 @@ from slack import WebClient
 from slack.signature import SignatureVerifier
 from .constants import *
 from .timecard_register.register import JmottoOperator
-
+from .member.crud import *
 
 # This `app` represents your existing Flask app
 app = Flask(__name__)
@@ -53,10 +54,6 @@ def handle_message(event_data):
                     % message["user"]
                 )
                 slack_client.chat_postMessage(channel=channel_id, text=message)
-            if any(item in command.lower() for item in function_diary):
-                message = hotel_json
-                slack_client.chat_postMessage(
-                    channel=channel_id, blocks=message)
     thread = Thread(target=send_reply, kwargs={"value": event_data})
     thread.start()
     return Response(status=200)
@@ -74,9 +71,8 @@ def slack_app():
         if payload["type"] == "shortcut" \
                 and payload["callback_id"] == "open-modal-shortcut":
             # Open a new modal by a global shortcut
-            users = refresh_users_data()
-            if len(users) == 0 \
-                    or payload["user"]["id"] not in map(lambda x: x['slackId'], users):
+            users = select_member((payload["user"]["id"],))
+            if not(users):
                 try:
                     api_response = slack_client.views_open(
                         trigger_id=payload["trigger_id"],
@@ -117,47 +113,37 @@ def slack_app():
 
                     return make_response(validate_error, 200)
 
-                exists_user = list(filter(lambda x: x["slackId"] ==
-                                          payload["user"]["id"], refresh_users_data()))[0]
+                exists_user = select_member((payload["user"]["id"],))
 
-                def make_resister(target_date):
+                def make_register(target_date):
                     JmottoOperator(
-                        (exists_user["detail"]["memberId"],
-                         exists_user["detail"]["userId"],
+                        (exists_user[1],
+                         exists_user[2],
                          input_password),
-                        (exists_user["detail"]["default_start_ts"],
-                         exists_user["detail"]["default_end_ts"])
+                        (exists_user[3],
+                         exists_user[4])
                     ).set_default_time_range(target_date)
                     slack_client.chat_postMessage(
                         channel=announce_channel, text="""
-                        Success diary resister <@{}>! \nPlease check your <https://www.j-motto.co.jp|J-MOTTO> timecard. (date -> {}) :tada:
+                        Success diary register <@{}>! \nPlease check your <https://www.j-motto.co.jp|J-MOTTO> timecard. (date -> {}) :tada:
                         """
                         .format(payload["user"]["id"],
                                 input_yyyyMM
                                 ))
 
-                thr = Thread(target=make_resister, args=[input_yyyyMM])
+                thr = Thread(target=make_register, args=[input_yyyyMM])
                 thr.start()
 
                 return make_response("", 200)
             if payload["view"]["callback_id"] == "regist-user":
                 start_ts = payload["view"]["state"]["values"]["timeset_start"]["start_time"]["selected_option"]["value"]
                 end_ts = "".join((str(int(start_ts[:2]) + 9), start_ts[2:]))
-                output_data = refresh_users_data()
-                output_data.append({
-                    "slackId": payload["user"]["id"],
-                    "detail": {
-                        "memberId": payload["view"]["state"]["values"]["memberID"]["jmottoMemberID"]["value"],
-                        "userId": payload["view"]["state"]["values"]["UserID"]["jmottoUserID"]["value"],
-                        "default_start_ts": payload["view"]["state"]["values"]["timeset_start"]["start_time"]["selected_option"]["value"],
-                        "default_end_ts": end_ts
-                    }
-                })
-
-                with open("app/save_data/users.json", "w+t") as output_new_user:
-                    output_new_user.write(json.dumps(output_data))
-
-                output_new_user.close()
+                create_member(
+                    (payload["user"]["id"],
+                     payload["view"]["state"]["values"]["memberID"]["jmottoMemberID"]["value"],
+                     payload["view"]["state"]["values"]["UserID"]["jmottoUserID"]["value"],
+                     payload["view"]["state"]["values"]["timeset_start"]["start_time"]["selected_option"]["value"],
+                     end_ts))
 
                 slack_client.chat_postMessage(
                     channel=announce_channel, text="""
